@@ -1,16 +1,16 @@
 import asyncio
 from datetime import datetime
 from src.api_handler import get_info
-from src.bot_handler import send_message
 
-
-schedule = [1, 2, 3, 4]  # Простой список дней: вторник-пятница
+schedule = [1, 2, 3, 4, 5]  # Простой список дней: вторник-пятница
 
 
 class PostScheduler:
-    def __init__(self):
-        self.all_info, self.last_row = get_info()
+    def __init__(self, all_info, last_row, bot):
+        self.all_info = all_info
+        self.last_row = last_row
         self.last_check = 0
+        self.ob_bot = bot
 
     async def check_new_posts(self):
         """Проверяет новые посты в таблице"""
@@ -23,6 +23,7 @@ class PostScheduler:
 
             # Полностью заменяем старые данные на новые
             self.all_info = only_new_data
+            self.ob_bot.append_new_info(only_new_data)
             self.last_row = new_last_row
             return True
         return False
@@ -37,11 +38,9 @@ class PostScheduler:
         if current_day in schedule:
             # Проверяем время (10-11 или 12-13 часов)
             if 10 <= current_hour < 11 or 12 <= current_hour < 13:
-                await send_message(self.all_info)
+                await self.ob_bot.send_message()
                 return True
         return False
-
-    #доработать do_posts и bot_handler потому что отправляет все данные за несколько секунд, вариант сделать класс для бота и интегрировать с расписанием, чтоб постился один пост из списка всех постов раз в 10 и 12 часов
 
     async def check_day(self):
         """Основная функция проверки дня и времени"""
