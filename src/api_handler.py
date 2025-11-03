@@ -8,7 +8,7 @@ load_dotenv()
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 sheet_id = os.getenv("google_sheets_id")
-RANGE = "A2:F"
+RANGE = "Релиз!A2:D"
 creds = service_account.Credentials.from_service_account_file(
     "credentials.json", scopes=SCOPES
 )
@@ -24,7 +24,6 @@ def get_hyperlinks():
     )
 
     sheets = result.get("sheets", [])
-
     row_dict = {}
 
     for sheet in sheets:
@@ -33,23 +32,23 @@ def get_hyperlinks():
 
             for row_index, row in enumerate(row_data):
                 values = row.get("values", [])
-                cell_b = values[1]
+                cell_d = values[3]
 
-                cell_text = cell_b.get("formattedValue", "").replace(" ", "")
+                cell_text = cell_d.get("formattedValue", "").replace(" ", "")
                 hyperlink = None
 
-                if "hyperlink" in cell_b:
-                    hyperlink = cell_b["hyperlink"]
-                elif "richTextValue" in cell_b:
-                    for text_run in cell_b["richTextValue"].get("runs", []):
+                if "hyperlink" in cell_d:
+                    hyperlink = cell_d["hyperlink"]
+                    text = cell_d.get('userEnteredValue').get('stringValue')
+                elif "richTextValue" in cell_d:
+                    for text_run in cell_d["richTextValue"].get("runs", []):
                         if "hyperlink" in text_run:
                             hyperlink = text_run["hyperlink"]
                             break
                 if cell_text[0] == "@":
                     row_dict[row_index + 2] = cell_text
                 else:
-                    row_dict[row_index + 2] = hyperlink
-
+                    row_dict[row_index + 2] = [hyperlink, text]
     return row_dict
 
 
@@ -65,12 +64,9 @@ def get_info():
     row_dict = {}
     row_index = 2
     for row in values:
-        row[1] = hyperlinks.get(row_index)
+        row[3] = hyperlinks.get(row_index)
         row_dict[row_index] = row
         row_index += 1
     last_row = list(row_dict.keys())[-1]
     return row_dict, last_row
 
-
-if __name__ == "__main__":
-    get_info()

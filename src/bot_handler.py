@@ -9,15 +9,10 @@ TOKEN = os.getenv("token")
 chat_id = os.getenv("chat_id")
 bot = Bot(token=TOKEN)
 
-topics = {"projects": 4, "as_is": 3, "vacancies": 5}
+topics_test = {"Projects": 4, "As is": 3, "Vacancies": 5}
 
-topics_job = {"projects": 2, "as_is": 19, "vacancies": 4}
+topics = {"Projects": 2, "As is": 19, "Vacancies": 4}
 
-projects = ["Хакатон", "Проект", "Стажировки", "Олимпиады"]
-
-as_is = ["Обучение", "Полезно знать", "Экскурсии"]
-
-vacancies = ["Офферы"]
 
 class BotHandler:
     def __init__(self, all_info):
@@ -32,46 +27,31 @@ class BotHandler:
         for row, values in self.rows.items():
 
             safe_values = []
-            for i in range(6):
+            for i in range(4):
                 if values and len(values) > i and values[i] is not None:
-                    safe_values.append(str(values[i]))
+                    safe_values.append(values[i])
                 else:
                     safe_values.append("")
 
-            title = safe_values[0]
-            link = safe_values[1]
-            category = safe_values[2]
-            type_ = safe_values[3]
-            ddl = safe_values[4] or "-"
-            description = safe_values[5] or "-"
+            chanel = safe_values[0]
+            tegs = safe_values[1].replace(",", " ")
+            description = safe_values[2]
+            link = safe_values[3][0] if type(safe_values[3]) == list else safe_values[3]
+            link_text = safe_values[3][1] if type(safe_values[3]) == list else ''
+            message_thread_id = topics.get(chanel)
 
-            if category in projects:
-                message_thread_id = topics.get("projects")
-            elif category in as_is:
-                message_thread_id = topics.get("as_is")
-            elif category in vacancies:
-                message_thread_id = topics.get("vacancies")
-            else:
-                message_thread_id = 1
-            if link == "@":
-                text = f"""<b>{title.replace(".", "․")}</b>
-                
-<b>DDL: {ddl}</b>
-раздел: {category}
-тип: {type_}
 
+            if link[0] == "@":
+                text = f"""{tegs}
 {description}
-Канал {link}
+                
+Канал: {link}
 """
             else:
-                text = f"""<b>{title.replace(".", "․")}</b>
-                
-<b>DDL: {ddl}</b>
-раздел: {category}
-тип: {type_}
-
+                text = f"""{tegs}
 {description}
-<a href='{link}'>Тык</a>
+
+Ссылка: <a href='{link}'> {link_text}</a>
 """
             await bot.send_message(
                 chat_id, text, parse_mode="HTML", message_thread_id=message_thread_id

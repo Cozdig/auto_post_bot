@@ -2,14 +2,14 @@ import asyncio
 from datetime import datetime
 from src.api_handler import get_info
 
-schedule = [1, 2, 3, 4, 5]  # Простой список дней: вторник-пятница
+schedule = [1, 2, 3, 4]  # Простой список дней: вторник-пятница
 
 
 class PostScheduler:
     def __init__(self, all_info, last_row, bot):
         self.all_info = all_info
         self.last_row = last_row
-        self.last_check = 0
+        self.last_hour_sent = None
         self.ob_bot = bot
 
     async def check_new_posts(self):
@@ -38,8 +38,12 @@ class PostScheduler:
         if current_day in schedule:
             # Проверяем время (10-11 или 12-13 часов)
             if 10 <= current_hour < 11 or 12 <= current_hour < 13:
-                await self.ob_bot.send_message()
-                return True
+                if self.last_hour_sent != current_hour:
+                    await self.ob_bot.send_message()
+                    self.last_hour_sent = current_hour
+                    return True
+                else:
+                    return False
         return False
 
     async def check_day(self):
@@ -65,11 +69,10 @@ class PostScheduler:
             current_hour = now.hour
 
             if current_hour >= 13:
+                self.last_hour_sent = None
                 break
 
-            if current_hour != self.last_check:
-                self.last_check = current_hour
-                await self.do_posts()
+            await self.do_posts()
 
             current_minute = now.minute
             minutes_to_wait = 30 - (current_minute % 30)
