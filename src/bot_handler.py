@@ -9,7 +9,7 @@ TOKEN = os.getenv("token")
 chat_id = os.getenv("chat_id")
 bot = Bot(token=TOKEN)
 
-topics_test = {"Projects": 4, "As is": 3, "Vacancies": 5}
+# topics_test = {"Projects": 4, "As is": 3, "Vacancies": 5}
 
 topics = {"Projects": 2, "As is": 19, "Vacancies": 4}
 
