@@ -39,7 +39,7 @@ class BotHandler:
             link = safe_values[3][0] if type(safe_values[3]) == list else safe_values[3]
             link_text = safe_values[3][1] if type(safe_values[3]) == list else ''
             message_thread_id = topics.get(chanel)
-
+            #сделать заголвки для столбца с заголовками, залить на сервак и показать булату
 
             if link[0] == "@":
                 text = f"""{tegs}
