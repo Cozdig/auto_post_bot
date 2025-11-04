@@ -11,10 +11,12 @@ class PostScheduler:
         self.last_row = last_row
         self.last_hour_sent = None
         self.ob_bot = bot
+        self.last_check = 0
 
     async def check_new_posts(self):
         """Проверяет новые посты в таблице"""
         new_all_info, new_last_row = get_info()
+        self.last_check = 1
         if new_last_row != self.last_row:
             only_new_data = {}
             for row_num, row_data in new_all_info.items():
@@ -33,7 +35,6 @@ class PostScheduler:
         now = datetime.now()
         current_day = now.weekday()
         current_hour = now.hour
-
         # Проверяем день недели (вторник-пятница)
         if current_day in schedule:
             # Проверяем время (10-11 или 12-13 часов)
@@ -51,7 +52,10 @@ class PostScheduler:
         now = datetime.now()
         current_day = now.weekday()
 
-        if current_day == 1:  # Вторник
+        if current_day != 1:
+            self.last_check = 0
+
+        if current_day == 1 and self.last_check == 0:  # Вторник
             await self.check_new_posts()
 
         if current_day in schedule:  # Вт-Пт
@@ -60,12 +64,12 @@ class PostScheduler:
         else:
             await self.wait_until_tuesday()
 
+
+
     async def run_daily_schedule(self):
         """Запускает ежедневное расписание"""
-
         while True:
             now = datetime.now()
-            current_day = now.weekday()
             current_hour = now.hour
 
             if current_hour >= 13:
@@ -76,9 +80,6 @@ class PostScheduler:
 
             current_minute = now.minute
             minutes_to_wait = 30 - (current_minute % 30)
-            if minutes_to_wait == 30:
-                minutes_to_wait = 0
-
             wait_seconds = minutes_to_wait * 60
             await asyncio.sleep(wait_seconds)
 
@@ -95,7 +96,14 @@ class PostScheduler:
     async def run(self):
         """Основной цикл программы"""
         while True:
-            await self.check_day()
+            now = datetime.now()
+            current_hour = now.hour
+            if 9 <= current_hour < 13:
+                await self.check_day()
+
+            elif current_hour >= 13:
+                await asyncio.sleep(7200) #спит два часа
+
 
 
 

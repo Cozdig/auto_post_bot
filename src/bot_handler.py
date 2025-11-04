@@ -27,7 +27,7 @@ class BotHandler:
         for row, values in self.rows.items():
 
             safe_values = []
-            for i in range(4):
+            for i in range(5):
                 if values and len(values) > i and values[i] is not None:
                     safe_values.append(values[i])
                 else:
@@ -38,17 +38,20 @@ class BotHandler:
             description = safe_values[2]
             link = safe_values[3][0] if type(safe_values[3]) == list else safe_values[3]
             link_text = safe_values[3][1] if type(safe_values[3]) == list else ''
+            header = safe_values[4]
             message_thread_id = topics.get(chanel)
-            #сделать заголвки для столбца с заголовками, залить на сервак и показать булату
+
 
             if link[0] == "@":
                 text = f"""{tegs}
+<b>{header}</b>
 {description}
                 
 Канал: {link}
 """
             else:
                 text = f"""{tegs}
+<b>{header}</b>
 {description}
 
 Ссылка: <a href='{link}'> {link_text}</a>

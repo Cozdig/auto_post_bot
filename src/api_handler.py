@@ -8,7 +8,8 @@ load_dotenv()
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
 sheet_id = os.getenv("google_sheets_id")
-RANGE = "Релиз!A2:D"
+RANGE = "Релиз!A2:E"
+range_links = "Релиз!D2:D"
 creds = service_account.Credentials.from_service_account_file(
     "credentials.json", scopes=SCOPES
 )
@@ -19,7 +20,7 @@ service = build("sheets", "v4", credentials=creds)
 def get_hyperlinks():
     result = (
         service.spreadsheets()
-        .get(spreadsheetId=sheet_id, ranges=[RANGE], includeGridData=True)
+        .get(spreadsheetId=sheet_id, ranges=[range_links], includeGridData=True)
         .execute()
     )
 
@@ -32,7 +33,8 @@ def get_hyperlinks():
 
             for row_index, row in enumerate(row_data):
                 values = row.get("values", [])
-                cell_d = values[3]
+
+                cell_d = values[0]
 
                 cell_text = cell_d.get("formattedValue", "").replace(" ", "")
                 hyperlink = None
