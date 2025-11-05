@@ -101,7 +101,7 @@ class PostScheduler:
             if 9 <= current_hour < 13:
                 await self.check_day()
 
-            elif current_hour >= 13:
+            else:
                 await asyncio.sleep(7200) #спит два часа
 
 
