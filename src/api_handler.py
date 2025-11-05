@@ -1,4 +1,5 @@
 import os.path
+import asyncio
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -63,6 +64,8 @@ def get_info():
         .execute()
     )
     values = result.get("values", [])
+    if not values:
+        return {}, 0
     row_dict = {}
     row_index = 2
     for row in values:
@@ -71,4 +74,3 @@ def get_info():
         row_index += 1
     last_row = list(row_dict.keys())[-1]
     return row_dict, last_row
-
