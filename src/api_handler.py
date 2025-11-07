@@ -1,5 +1,4 @@
 import os.path
-import asyncio
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -34,24 +33,27 @@ def get_hyperlinks():
 
             for row_index, row in enumerate(row_data):
                 values = row.get("values", [])
-
-                cell_d = values[0]
-
-                cell_text = cell_d.get("formattedValue", "").replace(" ", "")
-                hyperlink = None
-
-                if "hyperlink" in cell_d:
-                    hyperlink = cell_d["hyperlink"]
-                    text = cell_d.get('userEnteredValue').get('stringValue')
-                elif "richTextValue" in cell_d:
-                    for text_run in cell_d["richTextValue"].get("runs", []):
-                        if "hyperlink" in text_run:
-                            hyperlink = text_run["hyperlink"]
-                            break
-                if cell_text[0] == "@":
-                    row_dict[row_index + 2] = cell_text
+                if not values:
+                    row_dict[row_index + 2] = []
+                    continue
                 else:
-                    row_dict[row_index + 2] = [hyperlink, text]
+                    cell_d = values[0]
+
+                    cell_text = cell_d.get("formattedValue", "").replace(" ", "")
+                    hyperlink = None
+
+                    if "hyperlink" in cell_d:
+                        hyperlink = cell_d["hyperlink"]
+                        text = cell_d.get('userEnteredValue').get('stringValue')
+                    elif "richTextValue" in cell_d:
+                        for text_run in cell_d["richTextValue"].get("runs", []):
+                            if "hyperlink" in text_run:
+                                hyperlink = text_run["hyperlink"]
+                                break
+                    if cell_text[0] == "@":
+                        row_dict[row_index + 2] = cell_text
+                    else:
+                        row_dict[row_index + 2] = [hyperlink, text]
     return row_dict
 
 
@@ -69,8 +71,12 @@ def get_info():
     row_dict = {}
     row_index = 2
     for row in values:
-        row[3] = hyperlinks.get(row_index)
-        row_dict[row_index] = row
-        row_index += 1
+        if len(row) < 5:
+            row_dict[row_index] = row
+            row_index += 1
+        else:
+            row[3] = hyperlinks.get(row_index)
+            row_dict[row_index] = row
+            row_index += 1
     last_row = list(row_dict.keys())[-1]
     return row_dict, last_row

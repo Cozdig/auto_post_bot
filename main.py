@@ -11,6 +11,8 @@ async def main():
         all_info, last_row = get_info()
         if all_info:
             bot = BotHandler(all_info)
+            await bot.sort_as_is()
+            await bot.sort_other()
             scheduler = PostScheduler(all_info, last_row, bot)
             await scheduler.run()
         else:
