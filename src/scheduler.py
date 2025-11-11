@@ -30,7 +30,7 @@ class PostScheduler:
             return True
         return False
 
-    async def do_ai_is_posts(self):
+    async def do_as_is_posts(self):
         now = datetime.now()
         current_day = now.weekday()
         current_hour = now.hour
@@ -92,7 +92,7 @@ class PostScheduler:
                 self.last_hour_sent = None
                 break
 
-            await self.do_ai_is_posts()
+            await self.do_as_is_posts()
 
             current_minute = now.minute
             minutes_to_wait = 30 - (current_minute % 30)
