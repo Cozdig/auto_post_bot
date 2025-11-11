@@ -77,7 +77,7 @@ class PostScheduler:
         if current_day in schedule:  # Вт-Пт
             await self.run_daily_schedule()
 
-        else:
+        elif current_day != 0:
             await self.wait_until_monday()
 
     async def run_mon_schedule(self):
@@ -119,9 +119,7 @@ class PostScheduler:
     async def wait_until_monday(self):
         """Ждем следующего понедельника"""
         now = datetime.now()
-        days_until_tuesday = (0 - now.weekday()) % 7
-        if days_until_tuesday == 0:
-            days_until_tuesday = 7
+        days_until_tuesday = 7 - now.weekday()
 
         wait_seconds = days_until_tuesday * 24 * 3600
         await asyncio.sleep(wait_seconds)
