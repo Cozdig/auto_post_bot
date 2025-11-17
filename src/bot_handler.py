@@ -1,4 +1,5 @@
 import os
+import logging
 
 from aiogram import Bot
 from dotenv import load_dotenv
@@ -13,6 +14,12 @@ bot = Bot(token=TOKEN)
 
 topics = {"Projects": 2, "As is": 19, "Vacancies": 4}
 
+logging.basicConfig(
+    level=logging.INFO,  # Уровень логирования
+    format='%(asctime)s - %(name)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 
 class BotHandler:
     def __init__(self, all_info):
@@ -22,10 +29,12 @@ class BotHandler:
     async def append_new_info(self, new_data):
         """обновляет данные"""
         self.rows.update(new_data)
+        logger.info("Добавляю новые данные в бота")
         await self.sort_as_is()
         await self.sort_other()
 
     async def sort_as_is(self):
+        logger.info("Сортирую данные в as is")
         row_dict = self.rows
         as_is_dict = {}
         for row, values in row_dict.items():
@@ -37,6 +46,7 @@ class BotHandler:
         self.as_is = as_is_dict
 
     async def sort_other(self):
+        logger.info("Сортирую другие данные")
         as_is = self.as_is
         for row in as_is.keys():
             if row in self.rows.keys():
@@ -46,6 +56,7 @@ class BotHandler:
 
     async def send_message(self) -> None:
         """постит данные"""
+        logger.info("Начинаю постить в проекты и вакансии")
         for row, values in self.rows.items():
             safe_values = []
             for i in range(5):
@@ -88,11 +99,12 @@ class BotHandler:
                 chat_id, text, parse_mode="HTML", message_thread_id=message_thread_id
             )
             del self.rows[row]
+            logger.info("Удалил данные заканчиваю постить")
             break
 
 
     async def send_as_is(self) -> None:
-
+        logger.info("Начинаю постить в as is ")
         for row, values in self.as_is.items():
 
             safe_values = []
@@ -136,5 +148,6 @@ class BotHandler:
                 chat_id, text, parse_mode="HTML", message_thread_id=message_thread_id
             )
             del self.as_is[row]
+            logger.info("Удалил данные, заканчиваю постить")
             break
 

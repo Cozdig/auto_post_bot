@@ -1,4 +1,5 @@
 import os.path
+import logging
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
@@ -15,6 +16,12 @@ creds = service_account.Credentials.from_service_account_file(
 )
 
 service = build("sheets", "v4", credentials=creds)
+
+logging.basicConfig(
+    level=logging.INFO,  # Уровень логирования
+    format='%(asctime)s - %(name)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 
 def get_hyperlinks():
@@ -58,6 +65,7 @@ def get_hyperlinks():
 
 
 def get_info():
+    logger.info("Беру данные из таблицы")
     hyperlinks = get_hyperlinks()
     result = (
         service.spreadsheets()
@@ -67,6 +75,7 @@ def get_info():
     )
     values = result.get("values", [])
     if not values:
+        logger.info("Нет данных")
         return {}, 0
     row_dict = {}
     row_index = 2
@@ -79,4 +88,5 @@ def get_info():
             row_dict[row_index] = row
             row_index += 1
     last_row = list(row_dict.keys())[-1]
+    logger.info("Отдаю данные из таблицы")
     return row_dict, last_row
