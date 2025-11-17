@@ -49,7 +49,7 @@ class PostScheduler:
         # Проверяем день недели (понедельник)
         if current_day == 0:
             # Проверяем время (10-11)
-            if 10 <= current_hour < 11:
+            if 7 <= current_hour < 8:
                 if self.last_hour_sent != current_hour:
                     logger.info("Запускаю бота на пост в as is")
                     await self.ob_bot.send_as_is()
@@ -69,7 +69,7 @@ class PostScheduler:
         # Проверяем день недели (вторник-пятница)
         if current_day in schedule:
             # Проверяем время (10-11 или 12-13 часов)
-            if 10 <= current_hour < 11 or 12 <= current_hour < 13:
+            if 7 <= current_hour < 8 or 9 <= current_hour < 10:
                 if self.last_hour_sent != current_hour:
                     logger.info("Запускаю бота на пост в projects and vacancies")
                     await self.ob_bot.send_message()
@@ -109,7 +109,7 @@ class PostScheduler:
             now = datetime.now()
             current_hour = now.hour
 
-            if current_hour >= 13:
+            if current_hour >= 10:
                 logger.info("Сейчас больше 13 часов")
                 self.last_hour_sent = None
                 break
@@ -128,7 +128,7 @@ class PostScheduler:
             now = datetime.now()
             current_hour = now.hour
 
-            if current_hour >= 13:
+            if current_hour >= 10:
                 logger.info("Сейчас больше 13 часов")
                 self.last_hour_sent = None
                 break
@@ -158,7 +158,7 @@ class PostScheduler:
             logger.info(f"Запускаю scheduler")
             now = datetime.now()
             current_hour = now.hour
-            if 9 <= current_hour < 13:
+            if 6 <= current_hour < 10:
                 logger.info(f"Сейчас корректное время, иду проверять день")
                 await self.check_day()
 
