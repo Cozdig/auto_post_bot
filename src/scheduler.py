@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import gc
 
 from datetime import datetime
 from src.api_handler import get_info
@@ -21,6 +22,12 @@ class PostScheduler:
         self.last_hour_sent = None
         self.ob_bot = bot
         self.last_check = 0
+
+    async def memory_cleanup(self):
+        """Периодическая очистка памяти"""
+        collected = gc.collect()
+        logger.info(f"Очищено {collected} объектов памяти")
+
 
     async def check_new_posts(self):
         """Проверяет новые посты в таблице в понедельник"""
@@ -84,6 +91,9 @@ class PostScheduler:
         """Основная функция проверки дня и времени"""
         now = datetime.now()
         current_day = now.weekday()
+
+        if now.hour == 15 or now.hour == 3:
+            await self.memory_cleanup()
 
         if current_day != 0:
             logger.info("Сегодня не понедельник, меняю переменную")
