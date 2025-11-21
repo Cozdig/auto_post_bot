@@ -25,13 +25,16 @@ class BotHandler:
     def __init__(self, all_info):
         self.rows = all_info
         self.as_is = None
+        self.projects = None
+        self.vacancies = None
 
     async def append_new_info(self, new_data):
         """обновляет данные"""
         self.rows.update(new_data)
         logger.info("Добавляю новые данные в бота")
         await self.sort_as_is()
-        await self.sort_other()
+        await self.sort_projects()
+        await self.sort_vacancies()
 
     async def sort_as_is(self):
         logger.info("Сортирую данные в as is")
@@ -45,19 +48,34 @@ class BotHandler:
                     as_is_dict[row] = values
         self.as_is = as_is_dict
 
-    async def sort_other(self):
-        logger.info("Сортирую другие данные")
-        as_is = self.as_is
-        for row in as_is.keys():
-            if row in self.rows.keys():
-                del self.rows[row]
+    async def sort_vacancies(self):
+        logger.info("Сортирую вакансии")
+        row_dict = self.rows
+        vacancies = {}
+        for row, values in row_dict.items():
+            if not values:
+                vacancies[row] = []
             else:
-                continue
+                if values[0] == "Vacancies":
+                    vacancies[row] = values
+        self.vacancies = vacancies
 
-    async def send_message(self) -> None:
+    async def sort_projects(self):
+        logger.info("Сортирую проекты")
+        row_dict = self.rows
+        projects = {}
+        for row, values in row_dict.items():
+            if not values:
+                projects[row] = []
+            else:
+                if values[0] == "Projects":
+                    projects[row] = values
+        self.projects = projects
+
+    async def send_projects(self) -> None:
         """постит данные"""
-        logger.info("Начинаю постить в проекты и вакансии")
-        for row, values in self.rows.items():
+        logger.info("Начинаю постить в проекты")
+        for row, values in self.projects.items():
             safe_values = []
             for i in range(5):
                 if values and len(values) > i and values[i] is not None:
@@ -98,7 +116,7 @@ class BotHandler:
             await bot.send_message(
                 chat_id, text, parse_mode="HTML", message_thread_id=message_thread_id
             )
-            del self.rows[row]
+            del self.projects[row]
             logger.info("Удалил данные заканчиваю постить")
             break
 
@@ -149,5 +167,53 @@ class BotHandler:
             )
             del self.as_is[row]
             logger.info("Удалил данные, заканчиваю постить")
+            break
+
+    async def send_vacancies(self) -> None:
+        """постит данные"""
+        logger.info("Начинаю постить в вакансии")
+        for row, values in self.vacancies.items():
+            safe_values = []
+            for i in range(5):
+                if values and len(values) > i and values[i] is not None:
+                    safe_values.append(values[i])
+                else:
+                    safe_values.append("")
+
+            chanel = safe_values[0]
+            tegs = safe_values[1].replace(",", " ")
+            description = safe_values[2]
+            link = safe_values[3][0] if type(safe_values[3]) == list and len(safe_values[3]) == 2 else safe_values[3]
+            link_text = safe_values[3][1] if type(safe_values[3]) == list and len(safe_values[3]) == 2 else ''
+            header = safe_values[4]
+            message_thread_id = topics.get(chanel)
+            if link:
+
+                if link[0] == "@":
+                    text = f"""{tegs}
+<b>{header}</b>
+{description}
+
+Канал: {link}
+"""
+                else:
+                    text = f"""{tegs}
+<b>{header}</b>
+{description}
+
+Ссылка: <a href='{link}'> {link_text}</a>
+"""
+            else:
+                text = f"""{tegs}
+<b>{header}</b>
+{description}
+
+Без ссылки
+"""
+            await bot.send_message(
+                chat_id, text, parse_mode="HTML", message_thread_id=message_thread_id
+            )
+            del self.vacancies[row]
+            logger.info("Удалил данные заканчиваю постить")
             break
 

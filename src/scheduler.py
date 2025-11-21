@@ -76,14 +76,23 @@ class PostScheduler:
         # Проверяем день недели (вторник-пятница)
         if current_day in schedule:
             # Проверяем время (10-11 или 12-13 часов)
-            if 7 <= current_hour < 8 or 9 <= current_hour < 10:
+            if 7 <= current_hour < 8:
                 if self.last_hour_sent != current_hour:
-                    logger.info("Запускаю бота на пост в projects and vacancies")
-                    await self.ob_bot.send_message()
+                    logger.info("Запускаю бота на пост в projects")
+                    await self.ob_bot.send_projects()
                     self.last_hour_sent = current_hour
                     return True
                 else:
-                    logger.info("сейчас не 10-11 или 12-13 часов")
+                    logger.info("сейчас не 10-11 часов, пост уже был")
+                    return False
+            elif 9 <= current_hour < 10:
+                if self.last_hour_sent != current_hour:
+                    logger.info("Запускаю бота на пост в vacancies")
+                    await self.ob_bot.send_vacancies()
+                    self.last_hour_sent = current_hour
+                    return True
+                else:
+                    logger.info("сейчас не 12-13 часов, пост уже был")
                     return False
         return False
 

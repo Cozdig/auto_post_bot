@@ -20,7 +20,8 @@ async def main():
             logger.info("Проверка прошла успешно, бот начинает работу")
             bot = BotHandler(all_info)
             await bot.sort_as_is()
-            await bot.sort_other()
+            await bot.sort_projects()
+            await bot.sort_vacancies()
             scheduler = PostScheduler(all_info, last_row, bot)
             await scheduler.run()
         else:
