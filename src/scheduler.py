@@ -37,10 +37,10 @@ class PostScheduler:
         if new_last_row != self.last_row:
             only_new_data = {}
             for row_num, row_data in new_all_info.items():
-                if row_num > self.last_row:
+                if row_num not in self.all_info.keys():
+                    logger.info(f"Добавляю {row_data}")
                     only_new_data[row_num] = row_data
-            # Полностью заменяем старые данные на новые
-            self.all_info = only_new_data
+            self.all_info.update(only_new_data)
             await self.ob_bot.append_new_info(only_new_data)
             self.last_row = new_last_row
             logger.info("Новые посты добавлены")
