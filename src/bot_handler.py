@@ -99,12 +99,19 @@ class BotHandler:
                 
 Канал: {link}
 """
-                else:
+                elif not (link.endswith(".ru") or link.endswith(".com")):
                     text = f"""{tegs}
 <b>{header}</b>
 {description}
 
 Ссылка: <a href='{link}'> {link_text}</a>
+"""
+                else:
+                    text = f"""{tegs}
+<b>{header}</b>
+{description}
+
+{link}
 """
             else:
                 text = f"""{tegs}
@@ -148,12 +155,19 @@ class BotHandler:
 
 Канал: {link}
 """
-                else:
+                elif not (link.endswith(".ru") or link.endswith(".com")):
                     text = f"""{tegs}
 <b>{header}</b>
 {description}
 
 Ссылка: <a href='{link}'> {link_text}</a>
+"""
+                else:
+                    text = f"""{tegs}
+<b>{header}</b>
+{description}
+
+{link}
 """
             else:
                 text = f"""{tegs}
@@ -196,12 +210,19 @@ class BotHandler:
 
 Канал: {link}
 """
-                else:
+                elif not (link.endswith(".ru") or link.endswith(".com")):
                     text = f"""{tegs}
 <b>{header}</b>
 {description}
 
 Ссылка: <a href='{link}'> {link_text}</a>
+"""
+                else:
+                    text = f"""{tegs}
+<b>{header}</b>
+{description}
+
+{link}
 """
             else:
                 text = f"""{tegs}
