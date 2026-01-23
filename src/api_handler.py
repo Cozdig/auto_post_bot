@@ -59,8 +59,13 @@ def get_hyperlinks():
                                 break
                     if cell_text[0] == "@":
                         row_dict[row_index + 2] = cell_text
+
+                    elif cell_text.endswith(".ru") or cell_text.endswith(".com"):
+                        row_dict[row_index + 2] = cell_text
+
                     else:
                         row_dict[row_index + 2] = [hyperlink, text]
+
     return row_dict
 
 
