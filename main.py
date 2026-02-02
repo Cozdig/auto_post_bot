@@ -15,7 +15,7 @@ async def main():
     logger.info("Приложение запущено")
     while True:
         logger.info("Цикл запущен")
-        all_info, last_row = get_info()
+        all_info = get_info()
         if all_info:
             logger.info("Проверка прошла успешно, бот начинает работу")
             bot = BotHandler(all_info)
