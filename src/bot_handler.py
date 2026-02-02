@@ -30,7 +30,7 @@ class BotHandler:
 
     async def append_new_info(self, new_data):
         """обновляет данные"""
-        self.rows.update(new_data)
+        self.rows = new_data
         logger.info("Добавляю новые данные в бота")
         await self.sort_as_is()
         await self.sort_projects()

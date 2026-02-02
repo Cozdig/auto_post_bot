@@ -22,7 +22,7 @@ async def main():
             await bot.sort_as_is()
             await bot.sort_projects()
             await bot.sort_vacancies()
-            scheduler = PostScheduler(all_info, last_row, bot)
+            scheduler = PostScheduler(all_info, bot)
             await scheduler.run()
         else:
             logger.info("Проверка не прошла, бот идет спать на 2 часа")

@@ -87,6 +87,5 @@ def get_info():
             row[3] = hyperlinks.get(row_index)
             row_dict[row_index] = row
             row_index += 1
-    last_row = list(row_dict.keys())[-1]
     logger.info("Отдаю данные из таблицы")
-    return row_dict, last_row
+    return row_dict

@@ -15,10 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 class PostScheduler:
-    def __init__(self, all_info, last_row, bot):
+    def __init__(self, all_info, bot):
 
         self.all_info = all_info
-        self.last_row = last_row
         self.last_hour_sent = None
         self.ob_bot = bot
         self.last_check = 0
@@ -32,21 +31,13 @@ class PostScheduler:
     async def check_new_posts(self):
         """Проверяет новые посты в таблице в понедельник"""
         logger.info("Проверяю новые посты в понедельник")
-        new_all_info, new_last_row = get_info()
+        all_info = get_info()
         self.last_check = 1
-        if new_last_row != self.last_row:
-            only_new_data = {}
-            for row_num, row_data in new_all_info.items():
-                if row_num not in self.all_info.keys():
-                    logger.info(f"Добавляю {row_data}")
-                    only_new_data[row_num] = row_data
-            self.all_info.update(only_new_data)
-            await self.ob_bot.append_new_info(only_new_data)
-            self.last_row = new_last_row
-            logger.info("Новые посты добавлены")
-            return True
-        logger.info("Новых постов нет")
-        return False
+        logger.info(f"Добавляю данные")
+        self.all_info = all_info
+        await self.ob_bot.append_new_info(all_info)
+        logger.info("Новые посты добавлены")
+        return True
 
     async def do_as_is_posts(self):
         logger.info("Проверяю данные в as is")
