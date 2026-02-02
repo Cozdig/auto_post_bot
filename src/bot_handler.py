@@ -111,7 +111,7 @@ class BotHandler:
 <b>{header}</b>
 {description}
 
-{link}
+Напиши по почте: {link}
 """
             else:
                 text = f"""{tegs}
@@ -167,7 +167,7 @@ class BotHandler:
 <b>{header}</b>
 {description}
 
-{link}
+Напиши по почте: {link}
 """
             else:
                 text = f"""{tegs}
@@ -222,7 +222,7 @@ class BotHandler:
 <b>{header}</b>
 {description}
 
-{link}
+Напиши по почте: {link}
 """
             else:
                 text = f"""{tegs}
