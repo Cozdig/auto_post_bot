@@ -104,7 +104,7 @@ class BotHandler:
 <b>{header}</b>
 {description}
 
-Ссылка: <a href='{link}'> {link_text}</a>
+Ссылка: <a href='{link}'>{link_text}</a>
 """
                 else:
                     text = f"""{tegs}
@@ -160,7 +160,7 @@ class BotHandler:
 <b>{header}</b>
 {description}
 
-Ссылка: <a href='{link}'> {link_text}</a>
+Ссылка: <a href='{link}'>{link_text}</a>
 """
                 else:
                     text = f"""{tegs}
@@ -215,7 +215,7 @@ class BotHandler:
 <b>{header}</b>
 {description}
 
-Ссылка: <a href='{link}'> {link_text}</a>
+Ссылка: <a href='{link}'>{link_text}</a>
 """
                 else:
                     text = f"""{tegs}
