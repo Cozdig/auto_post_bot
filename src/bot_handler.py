@@ -99,19 +99,19 @@ class BotHandler:
                 
 Канал: {link}
 """
-                elif not (link.endswith(".ru") or link.endswith(".com")):
+                elif "@" in link and link[0] != "@":
                     text = f"""{tegs}
 <b>{header}</b>
 {description}
 
-Ссылка: <a href='{link}'>{link_text}</a>
+Напиши по почте: {link}
 """
                 else:
                     text = f"""{tegs}
 <b>{header}</b>
 {description}
 
-Напиши по почте: {link}
+Ссылка: <a href='{link}'>{link_text}</a>
 """
             else:
                 text = f"""{tegs}
@@ -155,19 +155,19 @@ class BotHandler:
 
 Канал: {link}
 """
-                elif not (link.endswith(".ru") or link.endswith(".com")):
+                elif "@" in link and link[0] != "@":
                     text = f"""{tegs}
 <b>{header}</b>
 {description}
 
-Ссылка: <a href='{link}'>{link_text}</a>
+Напиши по почте: {link}
 """
                 else:
                     text = f"""{tegs}
 <b>{header}</b>
 {description}
 
-Напиши по почте: {link}
+Ссылка: <a href='{link}'>{link_text}</a>
 """
             else:
                 text = f"""{tegs}
@@ -210,19 +210,19 @@ class BotHandler:
 
 Канал: {link}
 """
-                elif not (link.endswith(".ru") or link.endswith(".com")):
+                elif "@" in link and link[0] != "@":
                     text = f"""{tegs}
 <b>{header}</b>
 {description}
 
-Ссылка: <a href='{link}'>{link_text}</a>
+Напиши по почте: {link}
 """
                 else:
                     text = f"""{tegs}
 <b>{header}</b>
 {description}
 
-Напиши по почте: {link}
+Ссылка: <a href='{link}'>{link_text}</a>
 """
             else:
                 text = f"""{tegs}
