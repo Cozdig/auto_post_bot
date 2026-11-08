@@ -10,6 +10,10 @@ python = "^3.12"
 aiogram = "^3.22.0"
 black = "^25.9.0"
 python-dotenv = "^1.2.1"
+google-api-python-client = "^2.186.0"
+google-auth-httplib2 = "^0.2.1"
+google-auth-oauthlib = "^1.2.3"
+apscheduler = "^3.11.0"
 
 
 [build-system]
